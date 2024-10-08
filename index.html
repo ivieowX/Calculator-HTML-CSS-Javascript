@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,11 +17,16 @@
             font-family: 'Arial', sans-serif;
         }
 
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+
         .calculator {
-            background-color: #000000;
+            background-color: #ffffff;
             padding: 20px;
             border-radius: 15px;
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 1.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 1.2);
             width: 320px;
         }
 
@@ -46,90 +52,93 @@
         .buttons button {
             padding: 20px;
             font-size: 1.5rem;
-            background-color: #ffffff;
+            background-color: #8d8d8d;
             border: none;
             border-radius: 10px;
-            transition: background-color 0.3s ease, transform 0.1s ease;
-            box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s, transform 0.1s;
         }
 
         .buttons button:hover {
-            background-color: #ffce44;
-            color: #fff;
+            background-color: #000000;
+            color: #e2e2e2;
             transform: scale(1.05);
         }
 
-        .buttons .operator {
-            background-color: #ff6f61;
+        .history-container {
+            width: 300px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            max-height: 420px;
+            overflow-y: auto;
         }
 
-        .buttons .operator:hover {
-            background-color: #ff3d2e;
+        .history-title {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
         }
 
-        .buttons .result {
-            background-color: #4caf50;
+        .history div {
+            padding: 5px 0;
+            font-size: 1rem;
+            color: #333;
+            border-bottom: 1px solid #ddd;
         }
 
-        .buttons .result:hover {
-            background-color: #45a049;
-        }
-
-        .buttons .clear {
-            background-color: #f44336;
-        }
-
-        .buttons .clear:hover {
-            background-color: #d32f2f;
-        }
-
-        .buttons .backspace {
-            background-color: #ffa726;
-        }
-
-        .buttons .backspace:hover {
-            background-color: #fb8c00;
+        .history div:last-child {
+            border-bottom: none;
         }
     </style>
 </head>
+
 <body>
-    <div class="calculator">
-        <div class="display" id="display">0</div>
-        <div class="buttons">
-            <button class="clear" onclick="clearDisplay()">C</button>
+    <div class="container">
+        <div class="calculator">
+            <div class="display" id="display">0</div>
+            <div class="buttons">
+                <button class="clear" onclick="clearDisplay()">C</button>
 
-            <button onclick="appendToDisplay('(')">(</button>
-            <button onclick="appendToDisplay(')')">)</button>
+                <button onclick="appendToDisplay('(')">(</button>
+                <button onclick="appendToDisplay(')')">)</button>
 
-            <button class="operator" onclick="appendToDisplay('÷')">÷</button>
+                <button class="operator" onclick="appendToDisplay('÷')">÷</button>
 
-            <button onclick="appendToDisplay('7')">7</button>
-            <button onclick="appendToDisplay('8')">8</button>
-            <button onclick="appendToDisplay('9')">9</button>
+                <button onclick="appendToDisplay('7')">7</button>
+                <button onclick="appendToDisplay('8')">8</button>
+                <button onclick="appendToDisplay('9')">9</button>
 
-            <button class="operator" onclick="appendToDisplay('*')">×</button>
+                <button class="operator" onclick="appendToDisplay('*')">×</button>
 
-            <button onclick="appendToDisplay('4')">4</button>
-            <button onclick="appendToDisplay('5')">5</button>
-            <button onclick="appendToDisplay('6')">6</button>
+                <button onclick="appendToDisplay('4')">4</button>
+                <button onclick="appendToDisplay('5')">5</button>
+                <button onclick="appendToDisplay('6')">6</button>
 
-            <button class="operator" onclick="appendToDisplay('-')">−</button>
+                <button class="operator" onclick="appendToDisplay('-')">−</button>
 
-            <button onclick="appendToDisplay('1')">1</button>
-            <button onclick="appendToDisplay('2')">2</button>
-            <button onclick="appendToDisplay('3')">3</button>
+                <button onclick="appendToDisplay('1')">1</button>
+                <button onclick="appendToDisplay('2')">2</button>
+                <button onclick="appendToDisplay('3')">3</button>
 
-            <button class="operator" onclick="appendToDisplay('+')">+</button>
-            
-            <button onclick="appendToDisplay('.')">.</button>
-            <button onclick="appendToDisplay('0')">0</button>
+                <button class="operator" onclick="appendToDisplay('+')">+</button>
 
-            <button class="backspace" onclick="backspace()">⌫</button>
-            <button class="result" onclick="calculate()">=</button>
+                <button onclick="appendToDisplay('.')">.</button>
+                <button onclick="appendToDisplay('0')">0</button>
+                
+                <button class="backspace" onclick="backspace()">⌫</button>
+                <button class="result" onclick="calculate()">=</button>
+            </div>
         </div>
-        
+
+        <div class="history-container">
+            <div class="history-title">History</div>
+            <div class="history" id="history"></div>
+        </div>
     </div>
-    
+
     <script>
         function clearDisplay() {
             document.getElementById('display').innerText = '0';
@@ -137,32 +146,27 @@
 
         function appendToDisplay(value) {
             const display = document.getElementById('display');
-            if (display.innerText === '0') {
-                display.innerText = value;
-            } else {
-                display.innerText += value;
-            }
+            display.innerText = display.innerText === '0' ? value : display.innerText + value;
         }
 
         function backspace() {
             const display = document.getElementById('display');
-            if (display.innerText.length > 1) {
-                display.innerText = display.innerText.slice(0, -1);
-            } else {
-                display.innerText = '0';
-            }
+            display.innerText = display.innerText.length > 1 ? display.innerText.slice(0, -1) : '0';
         }
 
         function calculate() {
             const display = document.getElementById('display');
-            let expression = display.innerText.replace(/×/g, '*').replace(/÷/g, '/'); 
+            const history = document.getElementById('history');
+            let expression = display.innerText.replace(/×/g, '*').replace(/÷/g, '/');
             try {
-                display.innerText = eval(expression);
+                const result = eval(expression);
+                history.innerHTML += `<div>${display.innerText} = ${result}</div>`;
+                display.innerText = result;
             } catch {
                 display.innerText = 'Error';
             }
         }
     </script>
-
 </body>
+
 </html>
